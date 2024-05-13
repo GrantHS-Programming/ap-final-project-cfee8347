@@ -11,7 +11,7 @@ public class EuchreGame {
 
     public static void addCards(){
         for (int x = 0; x < 4; x++){
-            for (int y = 1; y <= 13; y++){
+            for (int y = 9; y <= 13; y++){
                 if (x == 0){
                     deck.add(new Card(y, "Club"));
                 } else if (x == 1){
@@ -37,6 +37,13 @@ public class EuchreGame {
                 System.out.println(deck.get(x).getNum() + " of " + deck.get(x).getSuit() + "s");
             }
         }
+    }
+
+    public void createPlayers(){
+        Player computer1 = new Player("computer1");
+        Player computer2 = new Player("computer2");
+        Player computer3 = new Player("computer3");
+
     }
 
 }
