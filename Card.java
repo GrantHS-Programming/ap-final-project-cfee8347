@@ -1,15 +1,25 @@
 public class Card {
 
-    private int num;
+    private String num;
     private String suit;
 
-    public Card(int num, String suit) {
+    public Card(String num, String suit) {
         this.num = num;
         this.suit = suit;
     }
 
-    public int getNum() {
-        return num;
+    public String getNum() {
+        if (num.equals("11")){
+            return "Jack";
+        } else if (num.equals("12")){
+            return "Queen";
+        } else if (num.equals("13")){
+            return "King";
+        } else if(num.equals("14")){
+            return "Ace";
+        } else {
+            return num;
+        }
     }
 
     public String getSuit(){
