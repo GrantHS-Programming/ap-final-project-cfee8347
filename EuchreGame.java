@@ -1,3 +1,5 @@
+import sun.lwawt.macosx.CSystemTray;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,16 +9,21 @@ public class EuchreGame {
 
     public static void main(String[] args) {
         addCards();
-        printDeck();
         gameSetup();
+        for (int x = 0; x < 5; x++){
+            System.out.print("Your hand: ");
+            player.printHand();
+            playATrick();
+            System.out.println(team1.getTricksTaken() + " " + team2.getTricksTaken());
+        }
     }
 
     static ArrayList<Card> deck = new ArrayList<>();
     static Card trumpCard;
-    static Player computer1 = new Player();
-    static Player computer2 = new Player();
-    static Player computer3 = new Player();
-    static Player player = new Player();
+    static Player computer1 = new Player("computer1");
+    static Player computer2 = new Player("computer2");
+    static Player computer3 = new Player("computer3");
+    static Player player = new Player("player");
     static ArrayList<Card> currentTrick = new ArrayList<>();
     static Team team1 = new Team(computer1, computer3);
     static Team team2 = new Team (computer2, player);
@@ -41,8 +48,8 @@ public class EuchreGame {
     }
 
     public static void printDeck(){
-        for (int x = 0; x < deck.size(); x++){
-            System.out.print(deck.get(x).getNum() + " of " + deck.get(x).getSuit() + "s, ");
+        for (Card card : deck) {
+            System.out.print(card.getCard() + ", ");
         }
         System.out.println("");
     }
@@ -92,39 +99,121 @@ public class EuchreGame {
     }
 
     public static void playATrick(){
+        int whoTook = 0;
+        System.out.println("Trump is " + trumpCard.getSuit() + "s");
         if (computer1.getSeat() == 1){
-            computerPlayACard(computer1);
-            computerPlayACard(computer2);
-            computerPlayACard(computer3);
+            System.out.println("computer1 played " + computerPlayACard(computer1).getCard());
+            System.out.println("computer2 played " + computerPlayACard(computer2).getCard());
+            System.out.println("computer3 played " + computerPlayACard(computer3).getCard());
             playerPlayACard();
+            for (int x = 1; x < currentTrick.size(); x++){
+                if (currentTrick.get(x).getActualNum() > currentTrick.get(x - 1).getActualNum() && currentTrick.get(x).getSuit().equals(currentTrick.get(x - 1).getSuit())){
+                    whoTook = x;
+                }
+            }
+            if (whoTook == 0){
+                computer1.addTricksTaken();
+                team1.addTricksTaken();
+            } else if (whoTook == 1){
+                computer2.addTricksTaken();
+                team2.addTricksTaken();
+            } else if (whoTook == 2){
+                computer3.addTricksTaken();
+                team1.addTricksTaken();
+            } else if (whoTook == 3){
+                player.addTricksTaken();
+                team2.addTricksTaken();
+            }
         } else if (computer2.getSeat() == 1){
-            computerPlayACard(computer2);
-            computerPlayACard(computer3);
+            System.out.println("computer2 played " + computerPlayACard(computer2).getCard());
+            System.out.println("computer3 played " + computerPlayACard(computer3).getCard());
             playerPlayACard();
-            computerPlayACard(computer1);
+            System.out.println("computer1 played " + computerPlayACard(computer1).getCard());
+            for (int x = 1; x < currentTrick.size(); x++){
+                if (currentTrick.get(x).getActualNum() > currentTrick.get(x - 1).getActualNum() && currentTrick.get(x).getSuit().equals(currentTrick.get(x - 1).getSuit())){
+                    whoTook = x;
+                }
+            }
+            if (whoTook == 0){
+                computer2.addTricksTaken();
+                team2.addTricksTaken();
+            } else if (whoTook == 1){
+                computer3.addTricksTaken();
+                team1.addTricksTaken();
+            } else if (whoTook == 2){
+                player.addTricksTaken();
+                team2.addTricksTaken();
+            } else if (whoTook == 3){
+                computer1.addTricksTaken();
+                team1.addTricksTaken();
+            }
         } else if (computer3.getSeat() == 1){
-            computerPlayACard(computer3);
+            System.out.println("computer3 played " + computerPlayACard(computer3).getCard());
             playerPlayACard();
-            computerPlayACard(computer1);
-            computerPlayACard(computer2);
+            System.out.println("computer1 played " + computerPlayACard(computer1).getCard());
+            System.out.println("computer2 played " + computerPlayACard(computer2).getCard());
+            for (int x = 1; x < currentTrick.size(); x++){
+                if (currentTrick.get(x).getActualNum() > currentTrick.get(x - 1).getActualNum() && currentTrick.get(x).getSuit().equals(currentTrick.get(x - 1).getSuit())){
+                    whoTook = x;
+                }
+            }
+            if (whoTook == 0){
+                computer3.addTricksTaken();
+                team1.addTricksTaken();
+            } else if (whoTook == 1){
+                player.addTricksTaken();
+                team2.addTricksTaken();
+            } else if (whoTook == 2){
+                computer1.addTricksTaken();
+                team1.addTricksTaken();
+            } else if (whoTook == 3){
+                computer2.addTricksTaken();
+                team2.addTricksTaken();
+            }
         } else if (player.getSeat() == 1){
+            System.out.println("It is your lead");
             playerPlayACard();
-            computerPlayACard(computer1);
-            computerPlayACard(computer2);
-            computerPlayACard(computer3);
+            System.out.println("computer1 played " + computerPlayACard(computer1).getCard());
+            System.out.println("computer2 played " + computerPlayACard(computer2).getCard());
+            System.out.println("computer3 played " + computerPlayACard(computer3).getCard());
+            for (int x = 1; x < currentTrick.size(); x++){
+                if (currentTrick.get(x).getActualNum() > currentTrick.get(x - 1).getActualNum() && currentTrick.get(x).getSuit().equals(currentTrick.get(x - 1).getSuit())){
+                    whoTook = x;
+                }
+            }
+            if (whoTook == 0){
+                player.addTricksTaken();
+                team2.addTricksTaken();
+            } else if (whoTook == 1){
+                computer1.addTricksTaken();
+                team1.addTricksTaken();
+            } else if (whoTook == 2){
+                computer2.addTricksTaken();
+                team2.addTricksTaken();
+            } else if (whoTook == 3){
+                computer3.addTricksTaken();
+                team1.addTricksTaken();
+            }
         }
     }
 
-    public static void computerPlayACard(Player computer){
+    public static Card computerPlayACard(Player computer){
+        int cardPlayed = -1;
         if (currentTrick.isEmpty()){
-            int cardPlayed = (int) (Math.random() * computer.getHandSize());
-            currentTrick.add(computer.removeCardFromHand(cardPlayed));
+            cardPlayed = (int) (Math.random() * computer.getHandSize());
+            currentTrick.add(computer.getCardInHand(cardPlayed));
         } else if (!currentTrick.isEmpty()){
-            int cardPlayed = (int) (Math.random() * computer.getHandSize());
-            if (computer.getCardInHand(cardPlayed).getSuit().equals(currentTrick.get(0).getSuit())){
-                currentTrick.add(computer.removeCardFromHand(cardPlayed));
+            cardPlayed = (int) (Math.random() * computer.getHandSize());
+            while (true) {
+                if (computer.getCardInHand(cardPlayed).getSuit().equals(currentTrick.get(0).getSuit())) {
+                    currentTrick.add(computer.getCardInHand(cardPlayed));
+                    break;
+                } else {
+                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+                }
             }
         }
+        return computer.removeCardFromHand(cardPlayed);
     }
 
     public static void playerPlayACard(){
@@ -133,12 +222,24 @@ public class EuchreGame {
             int cardIndex = input.nextInt();
             if (currentTrick.isEmpty()) {
                 currentTrick.add(player.removeCardFromHand(cardIndex));
+                break;
             } else if (!currentTrick.isEmpty()) {
+                boolean canFollow = false;
                 if (player.getCardInHand(cardIndex).getSuit().equals(currentTrick.get(0).getSuit())) {
                     currentTrick.add(player.removeCardFromHand(cardIndex));
                     break;
                 } else {
-                    System.out.println("You have to follow suit! Pick a different card.");
+                    for (Card card : player.getHand()) {
+                        if (card.getSuit().equals(currentTrick.get(0).getSuit())) {
+                            canFollow = true;
+                        }
+                    }
+                    if (!canFollow) {
+                        currentTrick.add(player.removeCardFromHand(cardIndex));
+                        break;
+                    } else if (canFollow) {
+                        System.out.println("You must follow suit! Trump is " + trumpCard.getSuit() + "s Pick another card");
+                    }
                 }
             }
         }

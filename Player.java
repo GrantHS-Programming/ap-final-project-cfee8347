@@ -6,6 +6,11 @@ public class Player {
     private boolean dealer;
     private int seat;
     private int tricksTaken;
+    private String name;
+
+    public Player(String name){
+        this.name = name;
+    }
 
 
     public ArrayList<Card> getHand(){
@@ -34,7 +39,7 @@ public class Player {
 
     public void printHand(){
         for (int x = 0; x < hand.size(); x++){
-            System.out.print(hand.get(x).getNum() + " of " + hand.get(x).getSuit() + "s, ");
+            System.out.print(hand.get(x).getCard() + ", ");
         }
         System.out.println("");
     }
