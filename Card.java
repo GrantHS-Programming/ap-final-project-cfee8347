@@ -1,11 +1,17 @@
+import java.util.ArrayList;
+
 public class Card {
 
     private String num;
     private String suit;
+    private boolean left;
+    private boolean right;
 
     public Card(String num, String suit) {
         this.num = num;
         this.suit = suit;
+        left = false;
+        right = false;
     }
 
     public String getNum() {
@@ -42,6 +48,20 @@ public class Card {
 
     public int getActualNum(){
         return Integer.parseInt(num);
+    }
+
+    public void setLeft(boolean left){
+        this.left = left;
+    }
+    public boolean isLeft(){
+        return left;
+    }
+
+    public void setRight(boolean right){
+        this.right = right;
+    }
+    public boolean isRight(){
+        return right;
     }
 
 }

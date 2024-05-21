@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Player {
 
     private ArrayList<Card> hand = new ArrayList<>();
-    private boolean dealer;
+    private boolean lead;
     private int seat;
     private int tricksTaken;
     private String name;
@@ -21,12 +21,12 @@ public class Player {
         hand.add(card);
     }
 
-    public void setDealer(Boolean isDealer){
-        dealer = isDealer;
+    public void setLead(Boolean isLead){
+        lead = isLead;
     }
 
-    public boolean isDealer(){
-        return dealer;
+    public boolean isLead(){
+        return lead;
     }
 
     public void setSeat(int seat){

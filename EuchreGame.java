@@ -10,12 +10,10 @@ public class EuchreGame {
     public static void main(String[] args) {
         addCards();
         gameSetup();
-        for (int x = 0; x < 5; x++){
-            System.out.print("Your hand: ");
-            player.printHand();
-            playATrick();
-            System.out.println(team1.getTricksTaken() + " " + team2.getTricksTaken());
-        }
+        System.out.print("Your hand: ");
+        player.printHand();
+        playATrick();
+        System.out.println(team1.getTricksTaken() + " " + team2.getTricksTaken());
     }
 
     static ArrayList<Card> deck = new ArrayList<>();
@@ -57,25 +55,25 @@ public class EuchreGame {
     public static void gameSetup(){
         int dealer = (int) (Math.random() * 4) + 1;
         if (dealer == 1){
-            computer1.setDealer(true);
+            computer1.setLead(true);
             computer1.setSeat(0);
             computer2.setSeat(1);
             computer3.setSeat(2);
             player.setSeat(3);
         } else if (dealer == 2){
-            computer2.setDealer(true);
+            computer2.setLead(true);
             computer1.setSeat(3);
             computer2.setSeat(0);
             computer3.setSeat(1);
             player.setSeat(2);
         } else if (dealer == 3){
-            computer3.setDealer(true);
+            computer3.setLead(true);
             computer1.setSeat(2);
             computer2.setSeat(3);
             computer3.setSeat(0);
             player.setSeat(1);
         } else if (dealer == 4){
-            player.setDealer(true);
+            player.setLead(true);
             computer1.setSeat(1);
             computer2.setSeat(2);
             computer3.setSeat(3);
@@ -96,6 +94,21 @@ public class EuchreGame {
             }
         }
         trumpCard = deck.get(deck.size() - 1);
+        for (Card card : deck){
+            if (trumpCard.getSuit().equals("Club") && card.getSuit().equals("Spade") && card.getActualNum() == 11){
+                card.setLeft(true);
+            } else if (trumpCard.getSuit().equals("Diamond") && card.getSuit().equals("Heart") && card.getActualNum() == 11){
+                card.setLeft(true);
+            } else if (trumpCard.getSuit().equals("Spade") && card.getSuit().equals("Club") && card.getActualNum() == 11){
+                card.setLeft(true);
+            } else if (trumpCard.getSuit().equals("Heart") && card.getSuit().equals("Diamond") && card.getActualNum() == 11){
+                card.setLeft(true);
+            }
+
+            if (card.getSuit().equals(trumpCard.getSuit()) && card.getActualNum() == 11){
+                card.setRight(true);
+            }
+        }
     }
 
     public static void playATrick(){
@@ -106,9 +119,15 @@ public class EuchreGame {
             System.out.println("computer2 played " + computerPlayACard(computer2).getCard());
             System.out.println("computer3 played " + computerPlayACard(computer3).getCard());
             playerPlayACard();
-            for (int x = 1; x < currentTrick.size(); x++){
-                if (currentTrick.get(x).getActualNum() > currentTrick.get(x - 1).getActualNum() && currentTrick.get(x).getSuit().equals(currentTrick.get(x - 1).getSuit())){
+            for (int x = 0; x < currentTrick.size(); x++){
+                if (currentTrick.get(x).isRight()){
                     whoTook = x;
+                    break;
+                } else if (currentTrick.get(x).isLeft()){
+                    whoTook = x;
+                    break;
+                } else if (currentTrick.get(x).getSuit().equals(trumpCard.getSuit())){
+
                 }
             }
             if (whoTook == 0){
@@ -198,22 +217,37 @@ public class EuchreGame {
     }
 
     public static Card computerPlayACard(Player computer){
-        int cardPlayed = -1;
+//        computer.printHand();
+        int cardPlayed;
+        boolean canFollow = false;
+//        System.out.println("1");
         if (currentTrick.isEmpty()){
+//            System.out.println("2");
             cardPlayed = (int) (Math.random() * computer.getHandSize());
             currentTrick.add(computer.getCardInHand(cardPlayed));
-        } else if (!currentTrick.isEmpty()){
-            cardPlayed = (int) (Math.random() * computer.getHandSize());
-            while (true) {
-                if (computer.getCardInHand(cardPlayed).getSuit().equals(currentTrick.get(0).getSuit())) {
-                    currentTrick.add(computer.getCardInHand(cardPlayed));
-                    break;
-                } else {
-                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+        } else if (!currentTrick.isEmpty()) {
+//            System.out.println("3");
+            for (Card card : computer.getHand()) {
+                if (card.getSuit().equals(currentTrick.get(0).getSuit())) {
+                    canFollow = true;
                 }
             }
+            if (canFollow) {
+                cardPlayed = (int) (Math.random() * computer.getHandSize());
+                while (!computer.getCardInHand(cardPlayed).getSuit().equals(currentTrick.get(0).getSuit())) {
+//                    System.out.println("4");
+                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+                }
+//                System.out.println("5");
+                currentTrick.add(computer.removeCardFromHand((cardPlayed)));
+            } else if (!canFollow){
+//                System.out.println("6");
+                cardPlayed = (int) (Math.random() * computer.getHandSize());
+                currentTrick.add(computer.removeCardFromHand((cardPlayed)));
+            }
         }
-        return computer.removeCardFromHand(cardPlayed);
+//        System.out.println("7");
+        return currentTrick.get(currentTrick.size() - 1);
     }
 
     public static void playerPlayACard(){
@@ -244,5 +278,4 @@ public class EuchreGame {
             }
         }
     }
-
 }
