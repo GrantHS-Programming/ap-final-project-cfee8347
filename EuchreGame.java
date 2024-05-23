@@ -119,16 +119,35 @@ public class EuchreGame {
             System.out.println("computer2 played " + computerPlayACard(computer2).getCard());
             System.out.println("computer3 played " + computerPlayACard(computer3).getCard());
             playerPlayACard();
+            boolean rightOrLeft = false;
             for (int x = 0; x < currentTrick.size(); x++){
                 if (currentTrick.get(x).isRight()){
+                    rightOrLeft = true;
                     whoTook = x;
                     break;
-                } else if (currentTrick.get(x).isLeft()){
-                    whoTook = x;
-                    break;
-                } else if (currentTrick.get(x).getSuit().equals(trumpCard.getSuit())){
-
                 }
+            }
+            for (int x = 0; x < currentTrick.size(); x++){
+                if (currentTrick.get(x).isLeft()) {
+                    whoTook = x;
+                    rightOrLeft = true;
+                    break;
+                }
+            }
+            if (!rightOrLeft) {
+                int currentLargest = 0;
+                for (int x = 1; x < currentTrick.size(); x++) {
+                    if (currentTrick.get(x).getSuit().equals(trumpCard.getSuit())){
+                        if (currentTrick.get(currentLargest).getSuit().equals(trumpCard.getSuit()) && currentTrick.get(x).getActualNum() > currentTrick.get(currentLargest).getActualNum()){
+                            currentLargest = x;
+                        } else if (!currentTrick.get(currentLargest).getSuit().equals(trumpCard.getSuit())){
+                            currentLargest = x;
+                        }
+                    }else if (currentTrick.get(x).getSuit().equals(currentTrick.get(0).getSuit()) && currentTrick.get(x).getActualNum() > currentTrick.get(currentLargest).getActualNum() && !currentTrick.get(currentLargest).getSuit().equals(trumpCard.getSuit())){
+                        currentLargest = x;
+                    }
+                }
+                whoTook = currentLargest;
             }
             if (whoTook == 0){
                 computer1.addTricksTaken();
