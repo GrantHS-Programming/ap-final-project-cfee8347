@@ -172,6 +172,30 @@ public class EuchreGame {
         }
     }
 
+    public static boolean isTeamTaking(){
+        if (currentTrick.size() == 2){
+            if (currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && currentTrick.get(0).getActualNum() > currentTrick.get(1).getActualNum()){
+                return true;
+            } else if (currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && currentTrick.get(0).getActualNum() < currentTrick.get(1).getActualNum()){
+                return false;
+            } else if (currentTrick.get(1).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(0).getSuit().equals(trumpCard.getSuit())){
+                return false;
+            } else if (!currentTrick.get(0).getSuit().equals(currentTrick.get(1).getSuit()) && !currentTrick.get(1).getSuit().equals(trumpCard.getSuit())){
+                return true;
+            }
+        } else if (currentTrick.size() == 2){
+            if (currentTrick.get(0).getSuit().equals(currentTrick.get(1).getSuit()) && currentTrick.get(0).getSuit().equals(currentTrick.get(2).getSuit()) && currentTrick.get(1).getActualNum() < currentTrick.get(0).getActualNum() && currentTrick.get(1).getActualNum() < currentTrick.get(2).getActualNum()){
+                return true;
+            } else if (currentTrick.get(0).getSuit().equals(currentTrick.get(1).getSuit()) && currentTrick.get(0).getSuit().equals(currentTrick.get(2).getSuit()) && currentTrick.get(1).getActualNum() > currentTrick.get(0).getActualNum() || currentTrick.get(1).getActualNum() > currentTrick.get(2).getActualNum()){
+                return false;
+            } else if (currentTrick.get(1).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(0).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(2).getSuit().equals(trumpCard.getSuit())){
+                return true;
+            } else if (currentTrick.get(0).getSuit().equals(trumpCard.getSuit()) || currentTrick.get(2).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(1).getSuit().equals(trumpCard.getSuit())){
+                return false;
+            }
+        }
+    }
+
 
     public static void playATrick(){
         int whoTook = 0;
