@@ -14,6 +14,9 @@ public class EuchreGame {
             currentTrick.clear();
             System.out.print("Your hand: ");
             player.printHand();
+            computer1.printHand();
+            computer2.printHand();
+            computer3.printHand();
             playATrick();
             System.out.println(team1.getTricksTaken() + " " + team2.getTricksTaken());
             System.out.println("");
@@ -173,84 +176,84 @@ public class EuchreGame {
     }
 
     public static boolean isTeamTaking() {
-        System.out.println("1");
+//        System.out.println("1");
         if (currentTrick.size() == 2) {
-            System.out.println("2");
+//            System.out.println("2");
             if (currentTrick.get(1).isRight()){
-                System.out.println("18");
+//                System.out.println("18");
                 return false;
             } else if (currentTrick.get(0).isRight()){
-                System.out.println("19");
+//                System.out.println("19");
                 return true;
             } else if (currentTrick.get(0).isLeft()){
-                System.out.println("20");
+//                System.out.println("20");
                 return true;
             }  else if (currentTrick.get(1).isLeft()){
-                System.out.println("21");
+//                System.out.println("21");
                 return false;
             } else if (currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && currentTrick.get(0).getActualNum() > currentTrick.get(1).getActualNum()) {
-                System.out.println("3");
+//                System.out.println("3");
                 return true;
             } else if (currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && currentTrick.get(0).getActualNum() < currentTrick.get(1).getActualNum()) {
-                System.out.println("4");
+//                System.out.println("4");
                 return false;
             } else if (currentTrick.get(1).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(0).getSuit().equals(trumpCard.getSuit())) {
-                System.out.println("5");
+//                System.out.println("5");
                 return false;
             } else if (!currentTrick.get(0).getSuit().equals(currentTrick.get(1).getSuit()) && !currentTrick.get(1).getSuit().equals(trumpCard.getSuit())) {
-                System.out.println("6");
+//                System.out.println("6");
                 return true;
             } else {
-                System.out.println("7");
+//                System.out.println("7");
                 return false;
             }
         } else if (currentTrick.size() > 2) {
-            System.out.println("8");
+//            System.out.println("8");
             if (currentTrick.get(0).isRight() || currentTrick.get(2).isRight()){
-                System.out.println("17");
+//                System.out.println("17");
                 return false;
             } else if (currentTrick.get(1).isRight()){
-                System.out.println("22");
+//                System.out.println("22");
                 return true;
             } else if (currentTrick.get(0).isLeft() || currentTrick.get(2).isLeft()){
-                System.out.println("23");
+//                System.out.println("23");
                 return false;
             } else if (currentTrick.get(1).isLeft()){
-                System.out.println("24");
+//                System.out.println("24");
                 return true;
             } else if (currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && currentTrick.get(2).getSuit().equals(currentTrick.get(0).getSuit())){
-                System.out.println("25");
+//                System.out.println("25");
                 if (currentTrick.get(1).getActualNum() < currentTrick.get(0).getActualNum() || currentTrick.get(1).getActualNum() < currentTrick.get(2).getActualNum()) {
-                    System.out.println("10");
+//                    System.out.println("10");
                     return false;
                 } else {
-                    System.out.println("16");
+//                    System.out.println("16");
                     return true;
                 }
             } else if (currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && !currentTrick.get(2).getSuit().equals(currentTrick.get(0).getSuit())){
                 System.out.println(26);
                 if (currentTrick.get(1).getActualNum() < currentTrick.get(0).getActualNum()){
-                    System.out.println("10");
+//                    System.out.println("10");
                     return false;
                 } else {
-                    System.out.println("16");
+//                    System.out.println("16");
                     return true;
                 }
             } else if (currentTrick.get(1).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(0).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(2).getSuit().equals(trumpCard.getSuit())) {
-                System.out.println("11");
+//                System.out.println("11");
                 return true;
             } else if (currentTrick.get(0).getSuit().equals(trumpCard.getSuit()) || currentTrick.get(2).getSuit().equals(trumpCard.getSuit()) && !currentTrick.get(1).getSuit().equals(trumpCard.getSuit())) {
-                System.out.println("12");
+//                System.out.println("12");
                 return false;
             } else if (!currentTrick.get(1).getSuit().equals(currentTrick.get(0).getSuit()) && !currentTrick.get(1).getSuit().equals(trumpCard.getSuit())) {
-                System.out.println("15");
+//                System.out.println("15");
                 return false;
             } else {
-                System.out.println("13");
+//                System.out.println("13");
                 return false;
             }
         } else {
-            System.out.println("14");
+//            System.out.println("14");
             return false;
         }
     }
@@ -488,6 +491,29 @@ public class EuchreGame {
         }
     }
 
+    public static int cardToPlay(Player computer){
+        int cardPlayed = (int) (Math.random() * computer.getHandSize());
+        for (int x = 1; x < computer.getHandSize(); x++){
+            if(isTeamTaking()){
+                if (computer.getHand().get(x).getSuit().equals(currentTrick.get(0).getSuit()) && computer.getHand().get(x).getActualNum() < computer.getHand().get(cardPlayed).getActualNum()){
+                    cardPlayed = x;
+                }
+            } else if (!isTeamTaking()){
+                if(currentTrick.isEmpty()){
+                    if (computer.getHand().get(x).isRight()){
+                        cardPlayed = x;
+                        return cardPlayed;
+                    } else if (computer.getHand().get(x).getActualNum() == 14){
+                        cardPlayed = x;
+                    } else if (computer.getHand().get(cardPlayed).getActualNum() != 14 && computer.getHand().get(x).getActualNum() == 13){
+                        cardPlayed = x;
+                    }
+                }
+            }
+        }
+        return cardPlayed;
+    }
+
     public static Card computerPlayACard(Player computer){
 //        computer.printHand();
         int cardPlayed;
@@ -495,7 +521,7 @@ public class EuchreGame {
 //        System.out.println("1");
         if (currentTrick.isEmpty()){
 //            System.out.println("2");
-            cardPlayed = (int) (Math.random() * computer.getHandSize());
+            cardPlayed = cardToPlay(computer);
             currentTrick.add(computer.removeCardFromHand(cardPlayed));
         } else if (!currentTrick.isEmpty()) {
 //            System.out.println("3");
@@ -507,16 +533,16 @@ public class EuchreGame {
                     }
                 }
                 if (canFollow) {
-                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+                    cardPlayed = cardToPlay(computer);
                     while (!computer.getCardInHand(cardPlayed).getSuit().equals(suitToFollow)) {
 //                    System.out.println("4");
-                        cardPlayed = (int) (Math.random() * computer.getHandSize());
+                        cardPlayed = cardToPlay(computer);
                     }
 //                System.out.println("5");
                     currentTrick.add(computer.removeCardFromHand((cardPlayed)));
                 } else if (!canFollow){
 //                System.out.println("6");
-                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+                    cardPlayed = cardToPlay(computer);
                     currentTrick.add(computer.removeCardFromHand((cardPlayed)));
                 }
             } else {
@@ -525,22 +551,22 @@ public class EuchreGame {
                         canFollow = true;
                     }
                 }
-                cardPlayed = (int) (Math.random() * computer.getHandSize());
+                cardPlayed = cardToPlay(computer);
                 if (computer.getCardInHand(cardPlayed).isLeft() && !currentTrick.get(0).getSuit().equals(trumpCard.getSuit())) {
                     if (!canFollow) {
                         currentTrick.add(computer.getCardInHand(cardPlayed));
                     }
                 } else if (canFollow) {
-                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+                    cardPlayed = cardToPlay(computer);
                     while (!computer.getCardInHand(cardPlayed).getSuit().equals(currentTrick.get(0).getSuit())) {
 //                    System.out.println("4");
-                        cardPlayed = (int) (Math.random() * computer.getHandSize());
+                        cardPlayed = cardToPlay(computer);
                     }
 //                System.out.println("5");
                     currentTrick.add(computer.removeCardFromHand((cardPlayed)));
                 } else if (!canFollow) {
 //                System.out.println("6");
-                    cardPlayed = (int) (Math.random() * computer.getHandSize());
+                    cardPlayed = cardToPlay(computer);
                     currentTrick.add(computer.removeCardFromHand((cardPlayed)));
                 }
             }
